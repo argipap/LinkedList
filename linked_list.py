@@ -2,6 +2,24 @@ import sys
 
 
 class Node(object):
+    """Class to represent a node of a LinkedList.
+
+    Attributes:
+        data (Optional[str]):
+            Contains the data of the Node object.
+            Default to None if not specified.
+        previous (Optional[str]):
+            Represents the pointer to the previous node.
+            Default to None if not specified.
+        next (Optional[str]):
+            Represents the pointer to the next node.
+            Default to None if not specified.
+
+    Methods:
+        __repr__: Overrides __repr__ dunder method.
+        Returns the data(str) contained in the Node object.
+    """
+
     def __init__(self, data=None, previous=None, next=None):
         self.data = data
         self.previous = previous
@@ -12,6 +30,24 @@ class Node(object):
 
 
 class LinkedList(object):
+    """Class to represent a LinkedList of Node objects.
+
+    Attributes:
+        head (str):
+            Specifies the head of the LinkedList.
+            Initialized as None.
+        size (str):
+            Specifies the size of a LinkedList.
+            Initialized as 0.
+
+    Methods:
+        __len__: Overrides __len__ dunder method.
+        Returns the size of the LinkedList.
+        __repr__: Overrides __repr__ dunder method.
+        Returns the data(str) contained in the Node object.
+        find: Finds the first occurrence of a key in the list.
+        Returns a Node object.
+    """
     def __init__(self):
         self.head = None
         self.size = 0
@@ -28,6 +64,17 @@ class LinkedList(object):
         return "[" + ", ".join(list) + "]"
 
     def find(self, key):
+        """
+        Finds the first occurrence of key argument in the list.
+        Takes O(n) time.
+
+        Args:
+            key(str): The key to search in the list.
+
+        Returns:
+            First Node object with data equals to key.
+            If no occurence found, returns None.
+        """
         current_node = self.head
         while current_node:
             if key == current_node.data:
@@ -37,6 +84,22 @@ class LinkedList(object):
 
 
 class SingleLinkedList(LinkedList):
+    """SubClass of LinkedList. Represents a SingleLinkedList of Node objects.
+
+    Attributes:
+        head (str):
+            Inherited from LinkedList.
+        size (str):
+            Inherited from LinkedList.
+
+    Methods:
+        prepend: Adds Node objects at the beginning of the LinkedList.
+        append: Adds Node objects at the end of the LinkedList.
+        reverse: Reverses the LinkedList in place and returns it.
+        remove: Remove the first occurence in the list.
+        insert_at: Insert Node at specific position in LinkedList.
+        insert_after: Insert Node after the first occurence of `key` found.
+    """
     def __init__(self):
         if sys.version_info[0] < 3:
             super(SingleLinkedList, self).__init__()
@@ -44,11 +107,25 @@ class SingleLinkedList(LinkedList):
             super().__init__()
 
     def prepend(self, *args):
+        """
+        Adds Node objects at the beginning of the LinkedList.
+        Takes O(1) time for each node.
+
+        Args:
+            *args: Variable length argument list of data.
+        """
         for data in args:
             self.head = Node(data=data, next=self.head)
             self.size += 1
 
     def append(self, *args):
+        """
+        Adds Node objects at the end of the LinkedList.
+        Takes O(n) time for each node.
+
+        Args:
+            *args: Variable length argument list of data.
+        """
         for data in args:
             if not self.head:
                 self.head = Node(data=data, next=self.head)
@@ -65,6 +142,13 @@ class SingleLinkedList(LinkedList):
             self.size += 1
 
     def reverse(self):
+        """
+        Reverses the list of Nodes in place.
+        Takes O(n) time.
+
+        Returns:
+            The list itself.
+        """
         current_node = self.head
         previous_node = None
         next_node = None
@@ -78,8 +162,14 @@ class SingleLinkedList(LinkedList):
 
     def remove(self, key):
         """
-        Remove the first occurrence of `key` in the list.
+        Removes the first occurrence of `key` in the list.
         Takes O(n) time.
+
+        Args:
+            key (str): The key to find the Node for removal.
+
+        Raises:
+            Exception: If no Node with `key` data found in the list.
         """
         # Find the element and keep a
         # reference to the element preceding it
@@ -101,8 +191,21 @@ class SingleLinkedList(LinkedList):
             current_node.next = None
         if found:
             self.size -= 1
+        else:
+            raise Exception("Node with data: %s not present in the list" % key)
 
     def insert_after(self, data, key):
+        """
+        Inserts new Node with `data` after the first occurence of `key`.
+        Takes O(n) time.
+
+        Args:
+            data (str): The content of the node to be inserted.
+            key (str): The key to search the Node with the correpsonding data.
+
+        Raises:
+            Exception: If no Node with `key` found.
+        """
         found = self.find(key)
         if found:
             found.next = Node(data, next=found.next)
@@ -111,6 +214,16 @@ class SingleLinkedList(LinkedList):
         raise Exception("Node with data: %s not present in the list" % key)
 
     def insert_at(self, data, pos):
+        """
+        Inserts new Node with `data` at position `pos`.
+        Takes O(1) time if position is <= 0 or >= list_size.
+        For all other cases takes O(n) time.
+
+        Args:
+            data (str): The content of the node to be inserted.
+            pos (int): The position in the list that the new Node
+            will be inserted. First Node of the list has position 0.
+        """
         counter = 0
         current_node = self.head
         if pos <= 0:
@@ -135,6 +248,23 @@ class SingleLinkedList(LinkedList):
 
 
 class DoubleLinkedList(LinkedList):
+    """SubClass of LinkedList. Represents a DoubleLinkedList of Node objects.
+
+    Attributes:
+        head (str):
+            Inherited from LinkedList.
+        size (str):
+            Inherited from LinkedList.
+
+    Methods:
+        prepend: Adds Node objects at the beginning of the LinkedList.
+        append: Adds Node objects at the end of the LinkedList.
+        reverse: Reverses the LinkedList in place and returns it.
+        remove_node: Remove a Node from the list.
+        remove: Remove the first occurence in the list.
+        insert_at: Insert Node at specific position in LinkedList.
+        insert_after: Insert Node after the first occurence of `key` found.
+    """
     def __init__(self):
         if sys.version_info[0] < 3:
             super(DoubleLinkedList, self).__init__()
@@ -142,6 +272,13 @@ class DoubleLinkedList(LinkedList):
             super().__init__()
 
     def prepend(self, *args):
+        """
+        Adds Node objects at the beginning of the LinkedList.
+        Takes O(1) time for each node.
+
+        Args:
+            *args: Variable length argument list of data.
+        """
         for data in args:
             new_head = Node(data=data, next=self.head)
             if self.head:
@@ -150,6 +287,13 @@ class DoubleLinkedList(LinkedList):
             self.size += 1
 
     def append(self, *args):
+        """
+        Adds Node objects at the end of the LinkedList.
+        Takes O(n) time for each node.
+
+        Args:
+            *args: Variable length argument list of data.
+        """
         for data in args:
             if not self.head:
                 self.head = Node(data=data, next=self.head)
@@ -166,6 +310,13 @@ class DoubleLinkedList(LinkedList):
             self.size += 1
 
     def reverse(self):
+        """
+        Reverses the list of Nodes in place.
+        Takes O(n) time.
+
+        Returns:
+            The list itself.
+        """
         current_node = self.head
         previous_node = None
         while current_node:
@@ -177,8 +328,19 @@ class DoubleLinkedList(LinkedList):
         return self
 
     def remove_node(self, node):
+        """
+        Unlink the Node `node` from the list.
+        Takes O(1) time.
+
+        Args:
+            node (Node): The node to be removed.
+
+        Raises:
+            TypeError: If node param is not a Node object.
+        """
         if not isinstance(node, Node):
-            raise Exception("2nd param should be a Node object")
+            raise TypeError("`node` param should be <Node> and is a <%s>"
+                            % type(node).__name__)
         if node.previous:
             node.previous.next = node.next
         if node.next:
@@ -190,6 +352,16 @@ class DoubleLinkedList(LinkedList):
         self.size -= 1
 
     def remove(self, key):
+        """
+        Removes the first occurrence of `key` in the list.
+        Takes O(n) time.
+
+        Args:
+            key (str): The key to find the Node for removal.
+
+        Raises:
+            Exception: If no Node with `key` data found in the list.
+        """
         found = self.find(key)
         if found:
             self.remove_node(found)
@@ -197,6 +369,17 @@ class DoubleLinkedList(LinkedList):
         raise Exception("Node with data: %s not present in the list" % key)
 
     def insert_after(self, data, key):
+        """
+        Inserts new Node with `data` after the first occurence of `key`.
+        Takes O(n) time.
+
+        Args:
+            data (str): The content of the node to be inserted.
+            key (str): The key to search the Node with the correpsonding data.
+
+        Raises:
+            Exception: If no Node with `key` found.
+        """
         found = self.find(key)
         if found:
             found.next = Node(data, previous=found, next=found.next)
@@ -205,6 +388,16 @@ class DoubleLinkedList(LinkedList):
         raise Exception("Node with data: %s not present in the list" % key)
 
     def insert_at(self, data, pos):
+        """
+        Inserts new Node with `data` at position `pos`.
+        Takes O(1) time if position is <= 0 or >= list_size.
+        For all other cases takes O(n) time.
+
+        Args:
+            data (str): The content of the node to be inserted.
+            pos (int): The position in the list that the new Node
+            will be inserted. First Node of the list has position 0.
+        """
         counter = 0
         current_node = self.head
         if pos <= 0:
